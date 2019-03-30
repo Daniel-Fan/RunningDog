@@ -359,9 +359,9 @@ module datapath3(colour,
 	always @(posedge clock)
 	begin: delay_counter
 		if (!resetn || set_over)
-			delay <= 20'd555555;
+			delay <= 20'd500000;
 		if (delay == 0)
-			delay <= 20'd555555;
+			delay <= 20'd500000;
 	    else if (en_delay)
 		begin
 			    delay <= delay - 1'b1;
