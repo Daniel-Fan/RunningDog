@@ -363,10 +363,12 @@ module datapath3(count,
 	begin: delay_counter
 		if (!resetn || set_over)
 			delay <= 20'd500000;
-		if (delay == 0 && count < 24'd10)
+		if (delay == 0 && count[23:0] < 24'd5)
 			delay <= 20'd500000;
-		else if(delay == 0 && count >= 24'd10)
-			delay <= 20'd480000;
+		else if(delay == 0 && count[23:0] >= 24'd5 && count[23:0] < 24'd10)
+			delay <= 20'd498000;
+		else if(delay == 0 && count[23:0] >= 24'd10)
+			delay <= 20'd496000;
 	    else if (en_delay)
 		begin
 			    delay <= delay - 1'b1;
