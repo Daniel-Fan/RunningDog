@@ -1,9 +1,9 @@
-module counter(hex0, hex1, hex2, hex3, hex4, hex5, clk, resetn, enable);
+module counter(count, hex0, hex1, hex2, hex3, hex4, hex5, clk, resetn, enable);
 	//SW[8] enable, SW[9] reset
 	input clk;
 	input resetn, enable;
 	output [6:0] hex0, hex1, hex2, hex3, hex4, hex5;
-	
+	output [23:0] count;
 	wire signal;
 	wire [23:0] display;
 	
@@ -21,6 +21,8 @@ module counter(hex0, hex1, hex2, hex3, hex4, hex5, clk, resetn, enable);
 	hex_decoder h3(.hex_digit(display[15:12]), .segments(hex3));
 	hex_decoder h4(.hex_digit(display[19:16]), .segments(hex4));
 	hex_decoder h5(.hex_digit(display[23:20]), .segments(hex5));
+
+	assign count = display;
 endmodule
 
 module RateDivider(pulse, enable, reset, clock, counting);

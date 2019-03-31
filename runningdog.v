@@ -49,7 +49,7 @@ module runningdog
 	wire ld_x, ld_y, draw, draw_ground;
 	wire en_xy, en_delay, finish_draw, finish_erase, finish_death, right, down, up, is_jump, is_kneel, finish_tree_draw, en_erase, en_xy_tree, draw_tree, finish_delay, is_over, set_over;
 	wire finish_bird, draw_bird, en_bird, draw_death, is_count;
-
+	wire [23:0] count;
 	// Create an Instance of a VGA controller - there can be only one!
 	// Define the number of colours as well as the initial background
 	// image file (.MIF) for the controller.
@@ -74,9 +74,10 @@ module runningdog
 		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
 		
-	counter c0(HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, CLOCK_50, KEY[1], is_count);
+	counter c0(count, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, CLOCK_50, KEY[1], is_count);
 	
 	datapath3 d3(
+				 .count(count),
 	             .colour(SW[9:7]),
 		         .resetn(resetn),
 		         .clock(CLOCK_50),
@@ -146,7 +147,8 @@ module runningdog
 		       );
 endmodule
 
-module datapath3(colour, 
+module datapath3(count,
+				colour, 
 				resetn, 
 				clock, 
 				draw, 
@@ -182,6 +184,7 @@ module datapath3(colour,
     input resetn, clock;
 	input en_xy, en_delay, en_erase, draw, right, down, up, is_jump, is_kneel, draw_ground, en_xy_tree, draw_tree, set_over, draw_bird, en_bird, draw_death;
 	input [2:0] colour;
+	input [23:0] count;
 	
 	output reg is_count;
 	output reg finish_erase;
@@ -360,8 +363,10 @@ module datapath3(colour,
 	begin: delay_counter
 		if (!resetn || set_over)
 			delay <= 20'd500000;
-		if (delay == 0)
+		if (delay == 0 && count < 24'd10)
 			delay <= 20'd500000;
+		else if(delay == 0 && count >= 24'd10)
+			delay <= 20'd480000;
 	    else if (en_delay)
 		begin
 			    delay <= delay - 1'b1;
