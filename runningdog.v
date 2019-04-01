@@ -346,8 +346,12 @@ module datapath3(count,
 			begin
 			    if(draw_ground)
 				    colour_out <= 3'b111;
-			    if (draw)
+			    if (draw && count[23:0] < 24'd5)
 				    colour_out <= 3'b100;
+				else if(draw &&  count[23:0] >= 24'd5 && count[23:0] < 24'd10)
+					colour_out <= 3'b000;
+				else if(draw && count[23:0] >= 24'd10)
+					colour_out <= 3'b110;
 				if (draw_tree)
 					colour_out <= 3'b010;
 				if(draw_bird)
