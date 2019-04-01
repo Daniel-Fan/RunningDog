@@ -357,22 +357,24 @@ module datapath3(count,
 				if(draw_bird)
 					colour_out <= 3'b001;
 			    if (draw_death)
-				    colour_out <= 3'b000;
-				if (en_erase)
+				    colour_out <= 3'b101;
+				if (en_erase && count[23:0] < 24'd10)
 					colour_out <= 3'b011;
+				else if (en_erase && count[23:0] >= 24'd10)
+					colour_out <= 3'b000;
 			end
 	end
 	
 	always @(posedge clock)
 	begin: delay_counter
 		if (!resetn || set_over)
-			delay <= 20'd500000;
+			delay <= 20'd492000;
 		if (delay == 0 && count[23:0] < 24'd5)
-			delay <= 20'd500000;
+			delay <= 20'd492000;
 		else if(delay == 0 && count[23:0] >= 24'd5 && count[23:0] < 24'd10)
-			delay <= 20'd498000;
+			delay <= 20'd490000;
 		else if(delay == 0 && count[23:0] >= 24'd10)
-			delay <= 20'd496000;
+			delay <= 20'd489000;
 	    else if (en_delay)
 		begin
 			    delay <= delay - 1'b1;
